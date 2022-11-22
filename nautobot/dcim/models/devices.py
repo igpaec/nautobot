@@ -13,7 +13,7 @@ from django.utils.safestring import mark_safe
 
 from nautobot.dcim.choices import DeviceFaceChoices, DeviceRedundancyGroupFailoverStrategyChoices, SubdeviceRoleChoices
 
-from nautobot.extras.models import ConfigContextModel, StatusModel
+from nautobot.extras.models import ConfigContextModel, RoleModel, StatusModel
 from nautobot.extras.querysets import ConfigContextModelQuerySet
 from nautobot.extras.utils import extras_features
 from nautobot.core.fields import AutoSlugField
@@ -90,7 +90,7 @@ class Manufacturer(OrganizationalModel):
     "relationships",
     "webhooks",
 )
-class DeviceType(PrimaryModel):
+class DeviceType(PrimaryModel, RoleModel):
     """
     A DeviceType represents a particular make (Manufacturer) and model of device. It specifies rack height and depth, as
     well as high-level functional role(s).
@@ -449,7 +449,7 @@ class Platform(OrganizationalModel):
     "statuses",
     "webhooks",
 )
-class Device(PrimaryModel, ConfigContextModel, StatusModel):
+class Device(PrimaryModel, ConfigContextModel, StatusModel, RoleModel):
     """
     A Device represents a piece of physical hardware. Each Device is assigned a DeviceType,
     DeviceRole, and (optionally) a Platform. Device names are not required, however if one is set it must be unique.
@@ -464,7 +464,6 @@ class Device(PrimaryModel, ConfigContextModel, StatusModel):
     """
 
     device_type = models.ForeignKey(to="dcim.DeviceType", on_delete=models.PROTECT, related_name="instances")
-    device_role = models.ForeignKey(to="dcim.DeviceRole", on_delete=models.PROTECT, related_name="devices")
     tenant = models.ForeignKey(
         to="tenancy.Tenant",
         on_delete=models.PROTECT,
@@ -578,7 +577,7 @@ class Device(PrimaryModel, ConfigContextModel, StatusModel):
 
     csv_headers = [
         "name",
-        "device_role",
+        "role",
         "tenant",
         "manufacturer",
         "device_type",
@@ -600,7 +599,7 @@ class Device(PrimaryModel, ConfigContextModel, StatusModel):
     ]
     clone_fields = [
         "device_type",
-        "device_role",
+        "role",
         "tenant",
         "platform",
         "site",
@@ -840,7 +839,7 @@ class Device(PrimaryModel, ConfigContextModel, StatusModel):
     def to_csv(self):
         return (
             self.name or "",
-            self.device_role.name,
+            self.role.name,
             self.tenant.name if self.tenant else None,
             self.device_type.manufacturer.name,
             self.device_type.model,

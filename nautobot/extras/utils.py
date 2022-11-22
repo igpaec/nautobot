@@ -399,3 +399,21 @@ def refresh_job_model_from_job_class(job_model_class, job_source, job_class, *, 
     )
 
     return (job_model, created)
+
+
+# Get model role name and ID;
+# Bulk set role to Null
+# Bulk set role back
+class RoleDataMigration:
+    model = None
+    model_ids_and_role_names = {}
+    role_field_name = None
+
+    def get_model_role_names_and_ids(self):
+        instance_with_roles = self.model.objects.filter(
+            **{self.role_field_name + "__isnull": False}
+        ).values("id", self.role_field_name + "__name")
+        print(instance_with_roles)
+        # self.model_ids_and_role_names.update()
+
+

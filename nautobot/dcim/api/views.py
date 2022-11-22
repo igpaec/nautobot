@@ -392,7 +392,7 @@ class DeviceBayTemplateViewSet(NautobotModelViewSet):
 
 class DeviceRoleViewSet(NautobotModelViewSet):
     queryset = DeviceRole.objects.annotate(
-        device_count=count_related(Device, "device_role"),
+        device_count=count_related(Device, "role"),
         virtualmachine_count=count_related(VirtualMachine, "role"),
     )
     serializer_class = serializers.DeviceRoleSerializer
@@ -422,7 +422,7 @@ class DeviceViewSet(ConfigContextQuerySetMixin, StatusViewSetMixin, NautobotMode
     # v2 TODO(jathan): Replace prefetch_related with select_related (extap tags because it is m2m)
     queryset = Device.objects.prefetch_related(
         "device_type__manufacturer",
-        "device_role",
+        "role",
         "tenant",
         "platform",
         "site",

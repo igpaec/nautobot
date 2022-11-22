@@ -1012,14 +1012,13 @@ class DeviceTypeForm(NautobotModelForm):
             "part_number",
             "u_height",
             "is_full_depth",
-            "subdevice_role",
+            "role",
             "front_image",
             "rear_image",
             "comments",
             "tags",
         ]
         widgets = {
-            "subdevice_role": StaticSelect2(),
             # Exclude SVG images (unsupported by PIL)
             "front_image": forms.ClearableFileInput(
                 attrs={"accept": "image/bmp,image/gif,image/jpeg,image/png,image/tiff"}
@@ -1042,7 +1041,7 @@ class DeviceTypeImportForm(BootstrapMixin, forms.ModelForm):
             "part_number",
             "u_height",
             "is_full_depth",
-            "subdevice_role",
+            "role",
             "comments",
         ]
 
@@ -1063,7 +1062,7 @@ class DeviceTypeFilterForm(NautobotFilterForm):
     manufacturer = DynamicModelMultipleChoiceField(
         queryset=Manufacturer.objects.all(), to_field_name="slug", required=False
     )
-    subdevice_role = forms.MultipleChoiceField(
+    role = forms.MultipleChoiceField(
         choices=add_blank_choice(SubdeviceRoleChoices),
         required=False,
         widget=StaticSelect2Multiple(),
@@ -1828,7 +1827,7 @@ class DeviceForm(LocatableModelFormMixin, NautobotModelForm, TenancyForm, LocalC
         queryset=DeviceType.objects.all(),
         query_params={"manufacturer_id": "$manufacturer"},
     )
-    device_role = DynamicModelChoiceField(queryset=DeviceRole.objects.all())
+    role = DynamicModelChoiceField(queryset=DeviceRole.objects.all())
     platform = DynamicModelChoiceField(
         queryset=Platform.objects.all(),
         required=False,
@@ -1852,7 +1851,7 @@ class DeviceForm(LocatableModelFormMixin, NautobotModelForm, TenancyForm, LocalC
         model = Device
         fields = [
             "name",
-            "device_role",
+            "role",
             "device_type",
             "serial",
             "asset_tag",
@@ -1878,7 +1877,7 @@ class DeviceForm(LocatableModelFormMixin, NautobotModelForm, TenancyForm, LocalC
             "local_context_schema",
         ]
         help_texts = {
-            "device_role": "The function this device serves",
+            "role": "The function this device serves",
             "serial": "Chassis serial number",
             "local_context_data": "Local config context data overwrites all source contexts in the final rendered "
             "config context",
@@ -1961,7 +1960,7 @@ class DeviceForm(LocatableModelFormMixin, NautobotModelForm, TenancyForm, LocalC
 
 
 class BaseDeviceCSVForm(StatusModelCSVFormMixin, CustomFieldModelCSVForm):
-    device_role = CSVModelChoiceField(
+    role = CSVModelChoiceField(
         queryset=DeviceRole.objects.all(),
         to_field_name="name",
         help_text="Assigned role",
@@ -2039,7 +2038,7 @@ class DeviceCSVForm(LocatableModelCSVFormMixin, BaseDeviceCSVForm):
     class Meta(BaseDeviceCSVForm.Meta):
         fields = [
             "name",
-            "device_role",
+            "role",
             "tenant",
             "manufacturer",
             "device_type",
@@ -2089,7 +2088,7 @@ class ChildDeviceCSVForm(BaseDeviceCSVForm):
     class Meta(BaseDeviceCSVForm.Meta):
         fields = [
             "name",
-            "device_role",
+            "role",
             "tenant",
             "manufacturer",
             "device_type",
@@ -2149,7 +2148,7 @@ class DeviceBulkEditForm(
         widget=StaticSelect2(),
     )
     rack_group = DynamicModelChoiceField(queryset=RackGroup.objects.all(), required=False)
-    device_role = DynamicModelChoiceField(queryset=DeviceRole.objects.all(), required=False)
+    role = DynamicModelChoiceField(queryset=DeviceRole.objects.all(), required=False)
     tenant = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
     platform = DynamicModelChoiceField(queryset=Platform.objects.all(), required=False)
     serial = forms.CharField(max_length=255, required=False, label="Serial Number")
@@ -3369,7 +3368,7 @@ class PopulateDeviceBayForm(BootstrapMixin, forms.Form):
             rack=device_bay.device.rack,
             parent_bay__isnull=True,
             device_type__u_height=0,
-            device_type__subdevice_role=SubdeviceRoleChoices.ROLE_CHILD,
+            device_type__role=SubdeviceRoleChoices.ROLE_CHILD,
         ).exclude(pk=device_bay.device.pk)
 
 
@@ -3425,7 +3424,7 @@ class DeviceBayCSVForm(CustomFieldModelCSVForm):
                 rack=device.rack,
                 parent_bay__isnull=True,
                 device_type__u_height=0,
-                device_type__subdevice_role=SubdeviceRoleChoices.ROLE_CHILD,
+                device_type__role=SubdeviceRoleChoices.ROLE_CHILD,
             ).exclude(pk=device.pk)
         else:
             self.fields["installed_device"].queryset = Interface.objects.none()

@@ -516,7 +516,7 @@ class ManufacturerSerializer(NautobotModelSerializer):
 class DeviceTypeSerializer(NautobotModelSerializer, TaggedObjectSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="dcim-api:devicetype-detail")
     manufacturer = NestedManufacturerSerializer()
-    subdevice_role = ChoiceField(choices=SubdeviceRoleChoices, allow_blank=True, required=False)
+    role = ChoiceField(choices=SubdeviceRoleChoices, allow_blank=True, required=False)
     device_count = serializers.IntegerField(read_only=True)
 
     class Meta:
@@ -529,7 +529,7 @@ class DeviceTypeSerializer(NautobotModelSerializer, TaggedObjectSerializer):
             "part_number",
             "u_height",
             "is_full_depth",
-            "subdevice_role",
+            "role",
             "front_image",
             "rear_image",
             "comments",
@@ -746,7 +746,7 @@ class PlatformSerializer(NautobotModelSerializer):
 class DeviceSerializer(NautobotModelSerializer, TaggedObjectSerializer, StatusModelSerializerMixin):
     url = serializers.HyperlinkedIdentityField(view_name="dcim-api:device-detail")
     device_type = NestedDeviceTypeSerializer()
-    device_role = NestedDeviceRoleSerializer()
+    role = NestedDeviceRoleSerializer()
     tenant = NestedTenantSerializer(required=False, allow_null=True)
     platform = NestedPlatformSerializer(required=False, allow_null=True)
     site = NestedSiteSerializer()
@@ -769,7 +769,7 @@ class DeviceSerializer(NautobotModelSerializer, TaggedObjectSerializer, StatusMo
             "url",
             "name",
             "device_type",
-            "device_role",
+            "role",
             "tenant",
             "platform",
             "serial",

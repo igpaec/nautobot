@@ -47,7 +47,7 @@ def hyperlinked_object(value, field="display"):
     Examples:
         >>> hyperlinked_object(device)
         '<a href="/dcim/devices/3faafe8c-bdd6-4317-88dc-f791e6988caa/">Device 1</a>'
-        >>> hyperlinked_object(device_role)
+        >>> hyperlinked_object(role)
         '<a href="/dcim/device-roles/router/" title="Devices that are routers, not switches">Router</a>'
         >>> hyperlinked_object(None)
         '<span class="text-muted">&mdash;</span>'

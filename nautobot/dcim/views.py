@@ -787,7 +787,7 @@ class ManufacturerView(generic.ObjectView):
         devices = (
             Device.objects.restrict(request.user, "view")
             .filter(device_type__manufacturer=instance)
-            .prefetch_related("status", "site", "tenant", "device_role", "rack", "device_type")
+            .prefetch_related("status", "site", "tenant", "role", "rack", "device_type")
         )
 
         device_table = tables.DeviceTable(devices)
@@ -1253,7 +1253,7 @@ class DeviceBayTemplateBulkDeleteView(generic.BulkDeleteView):
 
 class DeviceRoleListView(generic.ObjectListView):
     queryset = DeviceRole.objects.annotate(
-        device_count=count_related(Device, "device_role"),
+        device_count=count_related(Device, "role"),
         vm_count=count_related(VirtualMachine, "role"),
     )
     filterset = filters.DeviceRoleFilterSet
@@ -1269,12 +1269,12 @@ class DeviceRoleView(generic.ObjectView):
         # v2 TODO(jathan): Replace prefetch_related with select_related
         devices = (
             Device.objects.restrict(request.user, "view")
-            .filter(device_role=instance)
+            .filter(role=instance)
             .prefetch_related("status", "site", "tenant", "rack", "device_type")
         )
 
         device_table = tables.DeviceTable(devices)
-        device_table.columns.hide("device_role")
+        device_table.columns.hide("role")
 
         paginate = {
             "paginator_class": EnhancedPaginator,
@@ -1331,7 +1331,7 @@ class PlatformView(generic.ObjectView):
         devices = (
             Device.objects.restrict(request.user, "view")
             .filter(platform=instance)
-            .prefetch_related("status", "site", "tenant", "rack", "device_type", "device_role")
+            .prefetch_related("status", "site", "tenant", "rack", "device_type", "role")
         )
 
         device_table = tables.DeviceTable(devices)
@@ -1386,7 +1386,7 @@ class DeviceView(generic.ObjectView):
         "site__region",
         "rack__group",
         "tenant__group",
-        "device_role",
+        "role",
         "platform",
         "primary_ip4",
         "primary_ip6",
@@ -1719,7 +1719,7 @@ class ChildDeviceBulkImportView(generic.BulkImportView):
 class DeviceBulkEditView(generic.BulkEditView):
     # v2 TODO(jathan): Replace prefetch_related with select_related
     queryset = Device.objects.prefetch_related(
-        "tenant", "site", "rack", "device_role", "device_type__manufacturer", "secrets_group", "device_redundancy_group"
+        "tenant", "site", "rack", "role", "device_type__manufacturer", "secrets_group", "device_redundancy_group"
     )
     filterset = filters.DeviceFilterSet
     table = tables.DeviceTable
@@ -1728,7 +1728,7 @@ class DeviceBulkEditView(generic.BulkEditView):
 
 class DeviceBulkDeleteView(generic.BulkDeleteView):
     # v2 TODO(jathan): Replace prefetch_related with select_related
-    queryset = Device.objects.prefetch_related("tenant", "site", "rack", "device_role", "device_type__manufacturer")
+    queryset = Device.objects.prefetch_related("tenant", "site", "rack", "role", "device_type__manufacturer")
     filterset = filters.DeviceFilterSet
     table = tables.DeviceTable
 

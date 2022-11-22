@@ -176,7 +176,7 @@ class DeviceTable(StatusTableMixin, BaseTable):
     site = tables.Column(linkify=True)
     location = tables.Column(linkify=True)
     rack = tables.Column(linkify=True)
-    device_role = ColoredLabelColumn(verbose_name="Role")
+    role = ColoredLabelColumn(verbose_name="Role")
     device_type = tables.LinkColumn(
         viewname="dcim:devicetype",
         args=[Accessor("device_type__pk")],
@@ -204,7 +204,7 @@ class DeviceTable(StatusTableMixin, BaseTable):
             "name",
             "status",
             "tenant",
-            "device_role",
+            "role",
             "device_type",
             "platform",
             "serial",
@@ -234,7 +234,7 @@ class DeviceTable(StatusTableMixin, BaseTable):
             "site",
             "location",
             "rack",
-            "device_role",
+            "role",
             "device_type",
             "primary_ip",
         )
@@ -246,7 +246,7 @@ class DeviceImportTable(BaseTable):
     tenant = TenantColumn()
     site = tables.Column(linkify=True)
     rack = tables.Column(linkify=True)
-    device_role = tables.Column(verbose_name="Role")
+    role = tables.Column(verbose_name="Role")
     device_type = tables.Column(verbose_name="Type")
 
     class Meta(BaseTable.Meta):
@@ -258,7 +258,7 @@ class DeviceImportTable(BaseTable):
             "site",
             "rack",
             "position",
-            "device_role",
+            "role",
             "device_type",
         )
         empty_text = False

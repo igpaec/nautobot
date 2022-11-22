@@ -429,14 +429,9 @@ class RackGroupFilterSet(NautobotFilterSet, LocatableModelFilterSetMixin, NameSl
 
 
 class RackRoleFilterSet(NautobotFilterSet, NameSlugSearchFilterSet):
-    has_racks = RelatedMembershipBooleanFilter(
-        field_name="racks",
-        label="Has racks",
-    )
-
     class Meta:
         model = RackRole
-        fields = ["id", "name", "slug", "color", "description", "racks"]
+        fields = ["id", "name", "slug", "color", "description"]
 
 
 class RackFilterSet(NautobotFilterSet, LocatableModelFilterSetMixin, TenancyFilterSet, StatusModelFilterSetMixin):
@@ -747,7 +742,7 @@ class DeviceTypeFilterSet(NautobotFilterSet):
             "part_number",
             "u_height",
             "is_full_depth",
-            "subdevice_role",
+            "role",
             "comments",
             "instances",
         ]
@@ -878,18 +873,9 @@ class DeviceBayTemplateFilterSet(BaseFilterSet, DeviceTypeComponentFilterSet):
 
 
 class DeviceRoleFilterSet(NautobotFilterSet, NameSlugSearchFilterSet):
-    has_devices = RelatedMembershipBooleanFilter(
-        field_name="devices",
-        label="Has devices",
-    )
-    has_virtual_machines = RelatedMembershipBooleanFilter(
-        field_name="virtual_machines",
-        label="Has virtual machines",
-    )
-
     class Meta:
         model = DeviceRole
-        fields = ["id", "name", "slug", "color", "vm_role", "description", "devices", "virtual_machines"]
+        fields = ["id", "name", "slug", "color", "vm_role", "description"]
 
 
 class PlatformFilterSet(NautobotFilterSet, NameSlugSearchFilterSet):
@@ -968,12 +954,12 @@ class DeviceFilterSet(
         label="Device type (ID)",
     )
     role_id = django_filters.ModelMultipleChoiceFilter(
-        field_name="device_role_id",
+        field_name="role_id",
         queryset=DeviceRole.objects.all(),
         label="Role (ID)",
     )
     role = django_filters.ModelMultipleChoiceFilter(
-        field_name="device_role__slug",
+        field_name="role__slug",
         queryset=DeviceRole.objects.all(),
         to_field_name="slug",
         label="Role (slug)",

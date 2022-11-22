@@ -648,9 +648,6 @@ class IPAddressForm(NautobotModelForm, TenancyForm, ReturnURLForm, AddressFieldM
             "tenant",
             "tags",
         ]
-        widgets = {
-            "role": StaticSelect2(),
-        }
 
     def __init__(self, *args, **kwargs):
 
@@ -769,9 +766,6 @@ class IPAddressBulkAddForm(NautobotModelForm, TenancyForm, AddressFieldMixin):
             "tenant",
             "tags",
         ]
-        widgets = {
-            "role": StaticSelect2(),
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -89,7 +89,7 @@ class DeviceTypeTable(BaseTable):
             "part_number",
             "u_height",
             "is_full_depth",
-            "subdevice_role",
+            "role",
             "instance_count",
             "tags",
         )
