@@ -118,6 +118,11 @@ urlpatterns = [
         views.DeviceDetailPluginTabTwoView.as_view(),
         name="device_detail_tab_2",
     ),
+    path(
+        "sites/<uuid:pk>/example-plugin-tab/",
+        views.SiteDetailPluginTabView.as_view(),
+        name="site_detail_tab",
+    ),
     # This URL definition is here in order to test the override_views functionality which is defined
     # in examples.plugin_with_view_override.plugin_with_view_override.views
     path("override-target/", views.ViewToBeOverridden.as_view(), name="view_to_be_overridden"),

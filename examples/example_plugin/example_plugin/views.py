@@ -3,7 +3,7 @@ from django.views.generic import View
 
 from nautobot.core.views import generic
 from nautobot.circuits.models import Circuit
-from nautobot.dcim.models import Device
+from nautobot.dcim.models import Device, Site
 
 from example_plugin.models import AnotherExampleModel, ExampleModel
 from example_plugin import filters, forms, tables
@@ -42,6 +42,15 @@ class DeviceDetailPluginTabTwoView(generic.ObjectView):
 
     queryset = Device.objects.all()
     template_name = "example_plugin/tab_device_detail_2.html"
+
+
+class SiteDetailPluginTabView(generic.ObjectView):
+    """
+    Same as DeviceDetailPluginTabOneView view above but using a different template.
+    """
+
+    queryset = Site.objects.all()
+    template_name = "example_plugin/tab_site_detail.html"
 
 
 class ExamplePluginHomeView(View):

@@ -11,13 +11,32 @@ import useSWR from "swr"
 
 const fetcher = (url) => fetch(url, { credentials: "include" }).then((res) => res.json())
 const fetcherHTML = (url) => fetch(url, { credentials: "include" }).then((res) => res.text())
+const fetcherTabs = (url) => fetch(url, { credentials: "include" }).then((res) => {
+
+  return res.json().then((data) => {
+    console.log(data)
+
+    let tabs = []
+    data.tabs.map((tab_top) => {
+      Object.keys(tab_top).map((tab_key) => {
+        let tab = tab_top[tab_key]
+        console.log(tab)
+        tabs.push(<Tab title={tab.title} eventKey={tab.title}><div dangerouslySetInnerHTML={{__html: "<p>I can be retrieved from "+tab.url+"</p>"}} /></Tab>)
+      })
+    })
+    console.log(tabs)
+    return tabs
+  })
+})
 
 export default function SitesObjectRetrieve() {
 
+  var pluginConfig = []
   const router = useRouter()
   const { id } = router.query
   const { data: objectData, error } = useSWR(() => nautobot_url + "/api/dcim/sites/" + id + "/", fetcher)
   const { data: pluginHTML, _ } = useSWR(() => nautobot_url + "/dcim/sites/" + objectData.slug + "/?fragment=true", fetcherHTML)
+  var { data: pluginConfig, _2 } = useSWR(() => nautobot_url + "/dcim/sites/" + objectData.slug + "/?format=json", fetcherTabs)
   if (error) return <div>Failed to load site</div>
   if (!objectData) return <></>
   return (
@@ -101,6 +120,7 @@ export default function SitesObjectRetrieve() {
         <Tab eventKey="change_log" title="Change Log">
           <div dangerouslySetInnerHTML={{__html: "<p>Your html code here.<p>"}} />
         </Tab>
+        {pluginConfig}
       </Tabs>
     </Layout>
   )

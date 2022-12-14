@@ -81,6 +81,27 @@ class SiteContent(PluginTemplateExtension):
     def buttons(self):
         return "SITE CONTENT - BUTTONS"
 
+    def detail_tabs(self):
+        """
+        You may define extra tabs to render on a model's detail page by utilizing this method.
+        Each tab is defined as a dict in a list of dicts.
+
+        For each of the tabs defined:
+        - The <title> key's value will become the tab link's title.
+        - The <url> key's value is used to render the HTML link for the tab
+
+        Since the `model` attribute of this class is set as "dcim.device",
+        these tabs will be added to the Device model's detail page.
+
+        This example demonstrates defining two tabs. The tabs will be ordered by their position in list.
+        """
+        return [
+            {
+                "title": "Plugin Tab 1",
+                "url": reverse("plugins:example_plugin:site_detail_tab", kwargs={"pk": self.context["object"].pk}),
+            },
+        ]
+
 
 class ExampleModelContent(PluginTemplateExtension):
     model = "example_plugin.examplemodel"
