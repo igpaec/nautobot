@@ -212,6 +212,9 @@ class SiteView(generic.ObjectView):
     queryset = Site.objects.prefetch_related("region", "tenant__group")
 
     def get_extra_context(self, request, instance):
+
+        context = super().get_extra_context(request, instance)
+
         stats = {
             "rack_count": Rack.objects.restrict(request.user, "view").filter(site=instance).count(),
             "device_count": Device.objects.restrict(request.user, "view").filter(site=instance).count(),
@@ -240,11 +243,11 @@ class SiteView(generic.ObjectView):
         }
         RequestConfig(request, paginate).configure(locations_table)
 
-        return {
-            "locations_table": locations_table,
-            "stats": stats,
-            "rack_groups": rack_groups,
-        }
+        context["locations_table"] = locations_table
+        context["stats"] = stats
+        context["rack_groups"] = rack_groups
+
+        return context
 
 
 class SiteEditView(generic.ObjectEditView):

@@ -10,12 +10,14 @@ import { useRouter } from "next/router"
 import useSWR from "swr"
 
 const fetcher = (url) => fetch(url, { credentials: "include" }).then((res) => res.json())
+const fetcherHTML = (url) => fetch(url, { credentials: "include" }).then((res) => res.text())
 
 export default function SitesObjectRetrieve() {
 
   const router = useRouter()
   const { id } = router.query
   const { data: objectData, error } = useSWR(() => nautobot_url + "/api/dcim/sites/" + id + "/", fetcher)
+  const { data: pluginHTML, _ } = useSWR(() => nautobot_url + "/dcim/sites/" + objectData.slug + "/?fragment=true", fetcherHTML)
   if (error) return <div>Failed to load site</div>
   if (!objectData) return <></>
   return (
@@ -32,7 +34,6 @@ export default function SitesObjectRetrieve() {
       <div className="pull-right noprint"></div>
       <Tabs defaultActiveKey="site">
         <Tab eventKey="site" title="Site">
-          <br />
           <Card>
             <CardHeader>
               <strong>Site</strong>
@@ -88,12 +89,18 @@ export default function SitesObjectRetrieve() {
               </tbody>
             </Table>
           </Card>
+
+          <br />
+          <div dangerouslySetInnerHTML={{__html: pluginHTML}} />
+          <br />
         </Tab>
         <Tab eventKey="advanced" title="Advanced">
           <img src="https://raw.githubusercontent.com/nautobot/nautobot/develop/nautobot/docs/nautobot_logo.svg"></img>
         </Tab>
         <Tab eventKey="notes" title="Notes" />
-        <Tab eventKey="change_log" title="Change Log" />
+        <Tab eventKey="change_log" title="Change Log">
+          <div dangerouslySetInnerHTML={{__html: "<p>Your html code here.<p>"}} />
+        </Tab>
       </Tabs>
     </Layout>
   )

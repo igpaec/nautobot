@@ -88,6 +88,7 @@ class ObjectView(ObjectPermissionRequiredMixin, View):
         """
         return {
             "active_tab": request.GET.get("tab", "main"),
+            "wrapper_template": "generic/object_detail.html" if not request.GET.get("fragment", None) else "generic/object_retrieve_plugin_full_width.html",
         }
 
     # TODO: Remove this method in 2.0. Can be retrieved from instance itself now
