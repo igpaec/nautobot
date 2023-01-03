@@ -1,0 +1,5 @@
+<div>
+  <input unicorn:model.defer="site.name" type="text" id="site" /><br />
+  Hello, {{ site.name }}
+  <button unicorn:click='save("{{ site.pk }}")'>Save</button>
+</div>

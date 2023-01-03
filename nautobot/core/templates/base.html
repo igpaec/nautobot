@@ -1,3 +1,4 @@
+{% load unicorn %}
 {% load static %}
 {% load helpers %}
 {% load plugins %}
@@ -8,6 +9,7 @@
     <title>{% block title %}Home{% endblock %} - {{ settings.BRANDING_TITLE }}</title>
     {% include 'inc/media.html' %}
     {% block extra_styles %}{% endblock %}
+    {% unicorn_scripts %}
 </head>
 <body>
     {% include 'inc/nav_menu.html' %}

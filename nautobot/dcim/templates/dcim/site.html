@@ -1,8 +1,11 @@
 {% extends 'generic/object_detail.html' %}
+{% load unicorn %}
 {% load helpers %}
 {% load tz %}
 
+
 {% block content_left_page %}
+	{% unicorn 'site' %}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <strong>Site</strong>

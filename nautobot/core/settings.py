@@ -410,6 +410,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "constance.backends.database",
     "django_ajax_tables",
+    "django_unicorn",
 ]
 
 # Middleware
